@@ -1,26 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "jquery";
+import "popper.js";
+import 'bootstrap/dist/js/bootstrap.min';
+import CVParser from './components/CVParser';
+import Navbar from './components/Navbar';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <Navbar />
+        <div className="container mt-3">
+          <div className="jumbotron">
+            <h1 className="display-4">Try ExecuResume!</h1>
+            <p className="lead">Choose a Resume Document (doc, docx, pdf)</p>
+            <CVParser />
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;
