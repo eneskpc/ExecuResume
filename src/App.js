@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "jquery";
 import "popper.js";
 import 'bootstrap/dist/js/bootstrap.min';
-import CVParser from './components/CVParser';
+import CVResolver from './components/CVResolver';
 import Navbar from './components/Navbar';
 
 class App extends React.Component {
@@ -15,7 +15,7 @@ class App extends React.Component {
           <div className="jumbotron">
             <h1 className="display-4">Try ExecuResume!</h1>
             <p className="lead">Choose a Resume Document (doc, docx, pdf)</p>
-            <CVParser />
+            <CVResolver />
           </div>
         </div>
       </div>
