@@ -1,16 +1,24 @@
 .loading-box {
   position: relative;
 }
-.loading-box::before {
-  content: "Please wait. This process may take a few minutes.";
+.progressbar-container-in-loading-box {
+  display: none;
+}
+.loading-box .progressbar-container-in-loading-box {
   position: absolute;
-  z-index: 9;
-  background-color: rgba(255, 255, 255, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
-  top: 0;
-  left: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  z-index: 9;
+}
+.loading-box .progressbar-container-in-loading-box > .progress {
+  max-width: 500px;
+  width: 100%;
 }
