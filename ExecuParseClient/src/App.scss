@@ -1,0 +1,131 @@
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+
+* {
+  user-select: none;
+}
+body {
+  overflow-y: scroll;
+}
+a {
+  cursor: pointer;
+}
+.loading-box {
+  position: relative;
+}
+.progressbar-container-in-loading-box {
+  display: none;
+}
+.loading-box {
+  .progressbar-container-in-loading-box {
+    position: absolute;
+    left: 15px;
+    top: 0;
+    width: calc(100% - 30px);
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    z-index: 9;
+    > .progress {
+      max-width: 500px;
+      width: 100%;
+    }
+  }
+}
+.custom-thumbnail {
+  margin-bottom: 60px;
+  > .rounded-circle {
+    width: 125px;
+    height: 125px;
+    overflow: hidden;
+    margin-bottom: -60px;
+    margin-top: -15px;
+  }
+}
+.custom-switch.resume-switch {
+  position: absolute;
+  z-index: 9;
+  right: 20px;
+  top: 20px;
+}
+.card-body {
+  min-height: 200px;
+  padding-bottom: 30px;
+  padding-top: 10px;
+}
+
+.card-text {
+  margin-bottom: 0.25rem;
+  &.fixed-to-bottom {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    bottom: 5px;
+    font-size: 12px;
+  }
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.es-modal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 999;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 30px;
+  padding-top: 60px;
+  text-align: center;
+  .position-relative {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    max-width: 1150px;
+    text-align: center;
+    .close-button {
+      background-color: transparent;
+      margin: 0;
+      padding: 0;
+      border: none;
+      height: auto;
+      color: #fff;
+      position: absolute;
+      right: 0;
+      top: -50px;
+      font-size: 30px;
+    }
+    iframe {
+      border: none;
+      border-radius: 4px;
+    }
+  }
+}
+.navbar {
+  .navbar-brand {
+    img {
+      width: 100%;
+      max-width: 250px;
+    }
+  }
+}
+.person-search {
+  position: relative;
+  i {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 16px;
+    color: #555;
+  }
+  input {
+    padding-right: 30px;
+  }
+}
+.custom-file-label::after {
+  content: "Gözat";
+}
