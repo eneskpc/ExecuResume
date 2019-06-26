@@ -71,6 +71,38 @@ export default class CVInfoShowerByGrid extends Component {
         return personData && typeof selectedPersons.Resumes.find(p => p.Resume.UniqueKey === personData.UniqueKey) === "object";
     }
 
+    msToTime = (duration) => {
+        let seconds = Math.floor((duration / 1000) % 60),
+            minutes = Math.floor((duration / (1000 * 60)) % 60),
+            hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+        hours = (hours < 10) ? "0" + hours : hours;
+        minutes = (minutes < 10) ? "0" + minutes : minutes;
+        seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+        return hours + ":" + minutes + ":" + seconds;
+    }
+
+    createXMLFile = (sPersons) => {
+        let selectedXMLs = '';
+        for (let index = 0; index < sPersons.Resumes.length; index++) {
+            const element = sPersons.Resumes[index].Resume;
+            if (element) {
+                selectedXMLs += element.OutputXml.replace(/ResumeParserData/gi, "Resume");
+            }
+        }
+        return 'data:application/xml;base64,' + Base64.encode(jsontoxml({
+            Resumes: selectedXMLs
+        }, {
+                xmlHeader: {
+                    standalone: true
+                }
+            }));
+    }
+
+    onClickExcel = (sPersons, e) => {
+    }
+
     render() {
         return (
             <ResumeConsumer>
@@ -138,15 +170,20 @@ export default class CVInfoShowerByGrid extends Component {
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                                <div className="col-12 text-right">
-                                                    <div className="form-group">
-                                                        <a className="btn btn-sm btn-info mr-2" download='ResumesOfSelectedPersons.xml' href={'data:application/xml;base64,' + Base64.encode(jsontoxml(selectedPersons, {
-                                                            xmlHeader: {
-                                                                standalone: true
-                                                            }
-                                                        }))}>Seçili Özgeçmişleri XML Olarak Kaydet</a>
-                                                        <button type="button" className="btn btn-sm btn-outline-info mr-2" onClick={this.SelectedAllResumes}>Tüm Özgeçmişleri Seç</button>
-                                                        <button type="button" className="btn btn-sm btn-outline-info" onClick={this.DeselectedAllResumes}>Tüm Özgeçmişlerin Seçimini Kaldır</button>
+                                                <div className="col-12">
+                                                    <div className="p-2 bg-white border rounded d-flex justify-content-between align-items-center">
+                                                        <span className="text-muted">{this.msToTime(window.processTime)} sürdü.</span>
+                                                        <div className="dropdown">
+                                                            <button className="btn btn-sm btn-primary dropdown-toggle without-down-arrow" type="button" data-toggle="dropdown"><i className="fas fa-ellipsis-v"></i></button>
+                                                            <div className="dropdown-menu dropdown-menu-right">
+                                                                <button type="button" className="dropdown-item" onClick={this.SelectedAllResumes}>Tümünü Seç</button>
+                                                                <button type="button" className="dropdown-item" onClick={this.DeselectedAllResumes}>Tümünün Seçimini Kaldır</button>
+                                                                <div className="dropdown-divider"></div>
+                                                                <h6 className="dropdown-header">Dışa Aktar</h6>
+                                                                <button type="button" className="dropdown-item" onClick={this.onClickExcel.bind(this, selectedPersons)}>Excel</button>
+                                                                <a className="dropdown-item" download='ResumesOfSelectedPersons.xml' href={this.createXMLFile(selectedPersons)}>XML</a>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

@@ -113,6 +113,9 @@ a {
     }
   }
 }
+.dropdown-toggle.without-down-arrow::after {
+  content: unset !important;
+}
 .person-search {
   position: relative;
   i {

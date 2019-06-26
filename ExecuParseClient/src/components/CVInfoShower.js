@@ -5,6 +5,7 @@ import { Base64 } from 'js-base64';
 import male from '../male.png';
 import female from '../female.png';
 import Axios from 'axios';
+import XLSX from 'xlsx';
 import { ServerAddress, FilesPath } from '../SystemVariables';
 
 export default class CVInfoShower extends Component {
@@ -86,14 +87,58 @@ export default class CVInfoShower extends Component {
     }
 
     createXMLFile = (sPersons) => {
-        return 'data:application/xml;base64,' + Base64.encode(jsontoxml(sPersons, {
-            xmlHeader: {
-                standalone: true
+        let selectedXMLs = '';
+        for (let index = 0; index < sPersons.Resumes.length; index++) {
+            const element = sPersons.Resumes[index].Resume;
+            if (element) {
+                selectedXMLs += element.OutputXml.replace(/ResumeParserData/gi, "Resume");
             }
-        }));
+        }
+        return 'data:application/xml;base64,' + Base64.encode(jsontoxml({
+            Resumes: selectedXMLs
+        }, {
+                xmlHeader: {
+                    standalone: true
+                }
+            }));
     }
 
     onClickExcel = (sPersons, e) => {
+        let tempPersons = [];
+        for (let index = 0; index < sPersons.Resumes.length; index++) {
+            let element = Object.assign({}, sPersons.Resumes[index].Resume);
+            if (element) {
+                tempPersons = [
+                    ...tempPersons,
+                    {
+                        'Ad': `${element.FirstName} ${element.Middlename}`,
+                        'Soyad': element.LastName,
+                        'E-Posta': element.Email,
+                        'Telefon': element.Phone,
+                        'Cep Tel': element.Mobile,
+                        'Faks No': element.FaxNo,
+                        'Adres': element.Address,
+                        'Şehir': element.City,
+                        'Ülke': element.State,
+                        'Posta Kodu': element.ZipCode,
+                        'Ünvan': element.Accounting,
+                        'Alt Ünvan': element.SubCategory,
+                        'Doğum Tarihi': element.DateOfBirth,
+                        'Cinsiyet': element.Gender,
+                        'Medeni Hali': element.MaritalStatus,
+                        'Vatandaşlık': element.Nationality,
+                        'Bilinen Diller': element.LanguageKnown
+                    }
+                ]
+            }
+        }
+        let xlsxInstance = XLSX.utils.book_new();
+
+        XLSX.utils.book_append_sheet(xlsxInstance, XLSX.utils.json_to_sheet(tempPersons), "Özgeçmişler");
+
+        XLSX.writeFile(xlsxInstance, "Seçilen Özgeçmişler.xlsx", {
+            cellStyles: true
+        });
     }
 
     render() {
@@ -159,13 +204,20 @@ export default class CVInfoShower extends Component {
                                                         )
                                                     })
                                                 }
-                                                <div className="col-12 text-right">
-                                                    <div className="form-group">
-                                                        <strong className="mr-2">{this.msToTime(window.processTime)} sürdü.</strong>
-                                                        <button type="button" className="btn btn-sm btn-outline-success" onClick={this.onClickExcel.bind(this, selectedPersons)}>Excel olarak</button>
-                                                        <a className="btn btn-sm btn-info mr-2" download='ResumesOfSelectedPersons.xml' href={this.createXMLFile(selectedPersons)}>Seçili Özgeçmişleri XML Olarak Kaydet</a>
-                                                        <button type="button" className="btn btn-sm btn-outline-info mr-2" onClick={this.SelectedAllResumes}>Tüm Özgeçmişleri Seç</button>
-                                                        <button type="button" className="btn btn-sm btn-outline-info" onClick={this.DeselectedAllResumes}>Tüm Özgeçmişlerin Seçimini Kaldır</button>
+                                                <div className="col-12">
+                                                    <div className="p-2 bg-white border rounded d-flex justify-content-between align-items-center">
+                                                        <span className="text-muted">{this.msToTime(window.processTime)} sürdü.</span>
+                                                        <div className="dropdown">
+                                                            <button className="btn btn-sm btn-primary dropdown-toggle without-down-arrow" type="button" data-toggle="dropdown"><i className="fas fa-ellipsis-v"></i></button>
+                                                            <div className="dropdown-menu dropdown-menu-right">
+                                                                <button type="button" className="dropdown-item" onClick={this.SelectedAllResumes}>Tümünü Seç</button>
+                                                                <button type="button" className="dropdown-item" onClick={this.DeselectedAllResumes}>Tümünün Seçimini Kaldır</button>
+                                                                <div className="dropdown-divider"></div>
+                                                                <h6 className="dropdown-header">Dışa Aktar</h6>
+                                                                <button type="button" className="dropdown-item" onClick={this.onClickExcel.bind(this, selectedPersons)}>Excel</button>
+                                                                <a className="dropdown-item" download='Seçilen Özgeçmişler.xml' href={this.createXMLFile(selectedPersons)}>XML</a>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
